@@ -1,66 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
-body {
-  margin: 0;
-}
-
-@theme {
-
-  /* Primary */
-
-  --color-primary: #22c55e;
-  --color-primary-hover: #4ade80;
-  --color-primary-dark: #0f3d2e;
-  --color-primary-light: #a7f3d0;
-
-  /* Accents */
-
-  --color-blue: #3b82f6;
-  --color-purple: #8b5cf6;
-  --color-orange: #f97316;
-  --color-gold: #fbbf24;
-  --color-teal: #14b8a6;
-
-  /* Dark UI */
-
-  --color-background: #0b0f14;
-  --color-surface: #111827;
-  --color-elevated: #1f2937;
-  --color-border: #334155;
-
-  --color-muted: #94a3b8;
-  --color-text: #e5e7eb;
-
-  /* Status */
-
-  --color-success: #22c55e;
-  --color-info: #3b82f6;
-  --color-warning: #fbbf24;
-  --color-error: #ef4444;
-
-  /* World */
-
-  --color-earth: #8b5e3c;
-  --color-forest: #6b8f71;
-  --color-nature: #2e7d32;
-  --color-wood: #a67c52;
-  --color-sand: #d4b483;
-
-  --color-stone: #475569;
-  --color-building: #8b6f47;
-  --color-wood-dark: #6b4f3b;
-  --color-metal: #c9a96a;
-  --color-sky: #a8b8c9;
-}
-
 @theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -90,8 +39,6 @@ body {
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
