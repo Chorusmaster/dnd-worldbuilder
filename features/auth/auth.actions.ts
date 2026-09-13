@@ -6,6 +6,7 @@ import { logout } from "@/lib/auth";
 import { z, ZodError } from "zod";
 
 type AuthErrors = {
+  nickname?: string[];
   username?: string[];
   password?: string[];
   general?: string[];
@@ -26,6 +27,7 @@ export async function registerAction(
 ): Promise<AuthActionResult> {
   try {
     await registerUser({
+      nickname: formData.get("nickname"),
       username: formData.get("username"),
       password: formData.get("password"),
     });

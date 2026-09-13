@@ -1,11 +1,11 @@
-import { authSchema } from "./auth.schema";
-import { createUser, getUserByUsername } from "./auth.repository";
+import { registerSchema, loginSchema } from "./auth.schema";
+import { createUser, getUserByUsername, getUserById as getUserByIdDB } from "./auth.repository";
 import { connectDB } from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import { createToken } from "@/lib/auth";
 
 export async function registerUser(input: unknown) {
-  const data = authSchema.parse(input);
+  const data = registerSchema.parse(input);
 
   await connectDB();
 
@@ -18,15 +18,16 @@ export async function registerUser(input: unknown) {
   const passwordHash = await bcrypt.hash(data.password, 12);
 
   const user = await createUser({
+    nickname: data.nickname,
     username: data.username,
-    passwordHash,
+    passwordHash
   });
 
-  await createToken(user._id);
+  await createToken(user._id.toString());
 }
 
 export async function loginUser(input: unknown) {
-  const data = authSchema.parse(input);
+  const data = loginSchema.parse(input);
 
   await connectDB();
 
@@ -45,5 +46,9 @@ export async function loginUser(input: unknown) {
     throw new Error("Invalid credentials");
   }
 
-  await createToken(user._id);
+  await createToken(user._id.toString());
+}
+
+export async function getUserById(userId: string) {
+  return await getUserByIdDB(userId);
 }

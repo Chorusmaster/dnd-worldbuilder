@@ -11,23 +11,31 @@ import { useRouter } from "next/navigation";
 
 export default function Register() {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{
+    nickname?: string;
+    username?: string;
+    password?: string;
+    general?: string;
+  }>({});
   const router = useRouter();
 
   function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
+    setErrors({});
 
     const formData = new FormData(event.currentTarget);
 
     startTransition(async () => {
       const result = await registerAction(formData);
+      console.log(result)
       if (result.success) router.push("/");
-      else {
-        if (result.errors?.username) setError(result.errors.username[0]);
-        if (result.errors?.password) setError(result.errors.password[0]);
-        if (result.errors?.general) setError(result.errors.general[0]);
-      }
+      else
+        setErrors({
+          nickname: result.errors.nickname?.[0],
+          username: result.errors.username?.[0],
+          password: result.errors.password?.[0],
+          general: result.errors.general?.[0],
+        });
     });
   }
 
@@ -38,15 +46,37 @@ export default function Register() {
 
         <form className="mt-4" onSubmit={handleSubmit}>
           <Field className="pb-4">
+            <FieldLabel htmlFor="nickname">Nickname</FieldLabel>
+            <Input
+              className="min-w-72"
+              id="nickname"
+              name="nickname"
+              type="text"
+              placeholder="Dungeon master"
+              disabled={isPending}
+            />
+            {errors.nickname && (
+              <p className="text-sm text-destructive" role="alert">
+                {errors.nickname}
+              </p>
+            )}
+          </Field>
+
+          <Field className="pb-4">
             <FieldLabel htmlFor="username">Username</FieldLabel>
             <Input
               className="min-w-72"
               id="username"
               name="username"
               type="text"
-              placeholder="Enter your username"
+              placeholder="dungeon_master123"
               disabled={isPending}
             />
+            {errors.username && (
+              <p className="text-sm text-destructive" role="alert">
+                {errors.username}
+              </p>
+            )}
           </Field>
 
           <Field className="pb-4">
@@ -59,9 +89,18 @@ export default function Register() {
               placeholder="Enter your password"
               disabled={isPending}
             />
+            {errors.password && (
+              <p className="text-sm text-destructive" role="alert">
+                {errors.password}
+              </p>
+            )}
           </Field>
 
-          {error && <p className="text-sm text-destructive pb-4">{error}</p>}
+          {errors.general && (
+            <p className="text-sm text-destructive pb-4" role="alert">
+              {errors.general}
+            </p>
+          )}
 
           <div className="pb-4">
             Already have an account?{" "}
