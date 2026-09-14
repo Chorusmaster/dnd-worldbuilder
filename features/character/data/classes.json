@@ -1,0 +1,101 @@
+[
+  {
+    "id": "barbarian",
+    "name": "Barbarian",
+    "image": "/images/classes/barbarian.jpg",
+    "subclasses": [
+      "Path of the Berserker",
+      "Path of the Totem Warrior"
+    ]
+  },
+  {
+    "id": "bard",
+    "name": "Bard",
+    "image": "/images/classes/bard.jpg",
+    "subclasses": [
+      "College of Lore",
+      "College of Valor"
+    ]
+  },
+  {
+    "id": "cleric",
+    "name": "Cleric",
+    "image": "/images/classes/cleric.jpg",
+    "subclasses": [
+      "Life Domain",
+      "Light Domain"
+    ]
+  },
+  {
+    "id": "fighter",
+    "name": "Fighter",
+    "image": "/images/classes/fighter.jpg",
+    "subclasses": [
+      "Champion",
+      "Battle Master"
+    ]
+  },
+  {
+    "id": "monk",
+    "name": "Monk",
+    "image": "/images/classes/monk.jpg",
+    "subclasses": [
+      "Way of the Open Hand",
+      "Way of Shadow"
+    ]
+  },
+  {
+    "id": "paladin",
+    "name": "Paladin",
+    "image": "/images/classes/paladin.jpg",
+    "subclasses": [
+      "Oath of Devotion",
+      "Oath of Vengeance"
+    ]
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "image": "/images/classes/ranger.jpg",
+    "subclasses": [
+      "Hunter",
+      "Beast Master"
+    ]
+  },
+  {
+    "id": "rogue",
+    "name": "Rogue",
+    "image": "/images/classes/rogue.jpg",
+    "subclasses": [
+      "Thief",
+      "Assassin"
+    ]
+  },
+  {
+    "id": "sorcerer",
+    "name": "Sorcerer",
+    "image": "/images/classes/sorcerer.jpg",
+    "subclasses": [
+      "Draconic Bloodline",
+      "Wild Magic"
+    ]
+  },
+  {
+    "id": "warlock",
+    "name": "Warlock",
+    "image": "/images/classes/warlock.jpg",
+    "subclasses": [
+      "The Fiend",
+      "The Great Old One"
+    ]
+  },
+  {
+    "id": "wizard",
+    "name": "Wizard",
+    "image": "/images/classes/wizard.jpg",
+    "subclasses": [
+      "School of Evocation",
+      "School of Abjuration"
+    ]
+  }
+]

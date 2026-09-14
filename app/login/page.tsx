@@ -26,7 +26,7 @@ export default function Login() {
 
     startTransition(async () => {
       const result = await loginAction(formData);
-      if (result.success) router.push("/");
+      if (result.success) router.push("/dashboard");
       else
         setErrors({
           username: result.errors.username?.[0],

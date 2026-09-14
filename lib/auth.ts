@@ -3,7 +3,14 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+  throw new Error("JWT_SECRET is not configured");
+}
+
+const SECRET = new TextEncoder().encode(jwtSecret);
+
 const TOKEN_EXPIRATION_TIME = 60 * 60 * 24 * 7;
 
 export async function createToken(userId: string) {
@@ -40,7 +47,7 @@ export async function getCurrentUserId() {
     }
 
     return payload.sub;
-  } catch {
+  } catch(error) {
     return null;
   }
 }

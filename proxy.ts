@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "./lib/auth";
 
 export async function proxy(request: NextRequest) {
+  
   const userId = await getCurrentUserId();
 
   if (!userId) {

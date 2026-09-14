@@ -14,11 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useDashboard } from "./dashboard-context";
 import { useState, useTransition } from "react";
 
 type WorldDialogErrors = {
   name?: string;
+  description?: string;
   general?: string;
 };
 
@@ -81,6 +83,22 @@ const WorldDialog = ({createWorld}: WorldDialogProps) => {
               {errors.name && (
                 <p className="text-sm text-destructive" role="alert">
                   {errors.name}
+                </p>
+              )}
+            </Field>
+            <Field>
+              <Label htmlFor="description-1">Short description</Label>
+              <Textarea
+                id="description-1"
+                name="description"
+                placeholder="Tell more about your world"
+                className="max-h-56"
+                maxLength={500}
+                disabled={isLoading}
+              />
+              {errors.description && (
+                <p className="text-sm text-destructive" role="alert">
+                  {errors.description}
                 </p>
               )}
             </Field>

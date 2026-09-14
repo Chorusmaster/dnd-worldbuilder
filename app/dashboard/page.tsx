@@ -1,4 +1,4 @@
-import WorldPanel from "@/components/world-panel";
+import WorldPanel from "@/components/no-world-panel";
 
 export default async function Dashboard() {
   return (

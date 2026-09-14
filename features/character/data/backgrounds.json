@@ -1,0 +1,34 @@
+[
+  {
+    "value": "acolyte",
+    "label": "Acolyte"
+  },
+  {
+    "value": "criminal",
+    "label": "Criminal"
+  },
+  {
+    "value": "folk-hero",
+    "label": "Folk Hero"
+  },
+  {
+    "value": "hermit",
+    "label": "Hermit"
+  },
+  {
+    "value": "noble",
+    "label": "Noble"
+  },
+  {
+    "value": "sage",
+    "label": "Sage"
+  },
+  {
+    "value": "soldier",
+    "label": "Soldier"
+  },
+  {
+    "value": "urchin",
+    "label": "Urchin"
+  }
+]

@@ -35,11 +35,13 @@ export default function Dashboard({
 
     if (result.success) {
       setWorlds((old) => [...old, result.result]);
+      dashboardContext.setActiveWorld(result.result);
       return null;
     }
 
     return {
       name: result.errors.name?.[0],
+      description: result.errors.description?.[0],
       general: result.errors.general?.[0],
     };
   };
@@ -60,7 +62,7 @@ export default function Dashboard({
     <div className="flex h-full">
       <MainSidebar user={user} worlds={worlds} deleteWorld={deleteWorld} />
 
-      <main className="flex-1 bg-background flex justify-center items-center">
+      <main className="flex-1 bg-background flex justify-center items-center px-16 pt-8 pb-8">
         {children}
       </main>
 

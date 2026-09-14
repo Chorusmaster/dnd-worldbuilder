@@ -27,8 +27,7 @@ export default function Register() {
 
     startTransition(async () => {
       const result = await registerAction(formData);
-      console.log(result)
-      if (result.success) router.push("/");
+      if (result.success) router.push("/dashboard");
       else
         setErrors({
           nickname: result.errors.nickname?.[0],

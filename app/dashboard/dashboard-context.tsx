@@ -8,6 +8,8 @@ type DashboardContextValue = {
   setCreateWorldOpen: (value: boolean) => void;
   activeWorld: PublicWorldRecord | null;
   setActiveWorld: (value: PublicWorldRecord | null) => void;
+  activeTab: string;
+  setActiveTab: (value: string) => void;
 };
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
@@ -19,6 +21,7 @@ export function DashboardProvider({
 }) {
   const [createWorldOpen, setCreateWorldOpen] = useState(false);
   const [activeWorld, setActiveWorld] = useState<PublicWorldRecord | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("overview");
 
   return (
     <DashboardContext.Provider
@@ -26,7 +29,9 @@ export function DashboardProvider({
         createWorldOpen,
         setCreateWorldOpen,
         activeWorld,
-        setActiveWorld
+        setActiveWorld,
+        activeTab,
+        setActiveTab
       }}
     >
       {children}

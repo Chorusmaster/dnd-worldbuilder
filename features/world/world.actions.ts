@@ -14,6 +14,7 @@ export type WorldActionResult =
       success: false;
       errors: {
         name?: string[];
+        description?: string[];
         general?: string[];
       };
     };
@@ -22,8 +23,12 @@ export async function createWorldAction(
   formData: FormData,
 ): Promise<WorldActionResult> {
   try {
+    const name = formData.get("name");
+    const description = formData.get("description");
+
     const world = await createWorld({
-      name: formData.get("name"),
+      name,
+      ...(description ? {description: description} : {})
     });
 
     return {

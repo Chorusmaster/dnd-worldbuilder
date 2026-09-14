@@ -5,6 +5,10 @@ const WorldSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",

@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 export type PublicWorldRecord = {
   _id: string;
   name: string;
+  description?: string;
   owner: string;
   image?: string | null;
 };
@@ -11,21 +12,26 @@ export type PublicWorldRecord = {
 function toPublicWorldRecord(world: {
   _id: string;
   name: string;
+  description?: string;
   owner: string;
   image?: string;
 }): PublicWorldRecord {
   return {
     _id: world._id.toString(),
     name: world.name,
+    ...(world.description ? { description: world.description } : {}),
     owner: world.owner.toString(),
     ...(world.image ? { image: world.image } : {}),
   };
 }
 
-export async function createWorld(data: { name: string; owner: string }) {
+export async function createWorld(data: { name: string; description?: string; owner: string }) {
   await connectDB();
 
-  return toPublicWorldRecord(await World.create(data));
+  const world = await World.create(data);
+  const result = toPublicWorldRecord(world);
+
+  return result;
 }
 
 export async function getWorldsByUserId(userId: string) {

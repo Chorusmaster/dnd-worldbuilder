@@ -1,6 +1,7 @@
 "use client";
 import { logoutAction } from "@/features/auth/auth.actions";
 import { useState } from "react";
+import Link from "next/link";
 
 import {
   useSidebar,
@@ -50,6 +51,7 @@ import type { PublicUserRecord } from "@/features/auth/auth.repository";
 import { PublicWorldRecord } from "@/features/world/world.repository";
 
 import { useDashboard } from "@/app/dashboard/dashboard-context";
+import { usePathname } from "next/navigation";
 
 type MainSidebarProps = {
   user: PublicUserRecord;
@@ -69,132 +71,60 @@ export default function MainSidebar({ user, worlds, deleteWorld }: MainSidebarPr
             <WorldSwitcher worlds={worlds} deleteWorld={deleteWorld} />
           </SidebarHeader>
 
-          {dashboardContext.activeWorld &&
+          {dashboardContext.activeWorld ?
+          
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                World
-              </SidebarGroupLabel>
-
+              <SidebarGroupLabel>World</SidebarGroupLabel>
               <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Overview"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <LayoutDashboard className="size-4" />
-                    <span>Overview</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Map"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Map className="size-4" />
-                    <span>Maps</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarItem tab="overview" tooltip="Overview" icon={LayoutDashboard}>
+                  Overview
+                </SidebarItem>
+                <SidebarItem tab="maps" tooltip="Maps" icon={Map}>
+                  Maps
+                </SidebarItem>
               </SidebarMenu>
             </SidebarGroup>
 
             <SidebarGroup>
-              <SidebarGroupLabel className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Entities
-              </SidebarGroupLabel>
-
+              <SidebarGroupLabel>Entities</SidebarGroupLabel>
               <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Characters"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Users className="size-4" />
-                    <span>Characters</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Locations"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <MapPin className="size-4" />
-                    <span>Locations</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Factions"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Shield className="size-4" />
-                    <span>Factions</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Items"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Sword className="size-4" />
-                    <span>Items</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Creatures"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Bug className="size-4" />
-                    <span>Creatures</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarItem tab="characters" tooltip="Characters" icon={Users}>
+                  Characters
+                </SidebarItem>
+                <SidebarItem tab="locations" tooltip="Locations" icon={MapPin}>
+                  Locations
+                </SidebarItem>
+                <SidebarItem tab="factions" tooltip="Factions" icon={Shield}>
+                  Factions
+                </SidebarItem>
+                <SidebarItem tab="items" tooltip="Items" icon={Sword}>
+                  Items
+                </SidebarItem>
+                <SidebarItem tab="creatures" tooltip="Creatures" icon={Bug}>
+                  Creatures
+                </SidebarItem>
               </SidebarMenu>
             </SidebarGroup>
 
             <SidebarGroup>
-              <SidebarGroupLabel className="px-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Campaign
-              </SidebarGroupLabel>
-
+              <SidebarGroupLabel>Campaign</SidebarGroupLabel>
               <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Quests"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <ScrollText className="size-4" />
-                    <span>Quests</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Events"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <Calendar className="size-4" />
-                    <span>Events</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    tooltip="Notes"
-                    className="h-9 gap-3 px-3 text-sm"
-                  >
-                    <NotebookPen className="size-4" />
-                    <span>Notes</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarItem tab="quests" tooltip="Quests" icon={ScrollText}>
+                  Quests
+                </SidebarItem>
+                <SidebarItem tab="events" tooltip="Events" icon={Calendar}>
+                  Events
+                </SidebarItem>
+                <SidebarItem tab="notes" tooltip="Notes" icon={NotebookPen}>
+                  Notes
+                </SidebarItem>
               </SidebarMenu>
             </SidebarGroup>
-          </SidebarContent>}
+          </SidebarContent> :
+
+          <SidebarContent />
+          }
 
           <SidebarFooter>
             <NavUser user={user} />
@@ -202,6 +132,39 @@ export default function MainSidebar({ user, worlds, deleteWorld }: MainSidebarPr
         </Sidebar>
       </SidebarProvider>
     </div>
+  );
+}
+
+function SidebarItem({
+  tab,
+  tooltip,
+  icon: Icon,
+  children,
+}: {
+  tab: string;
+  tooltip: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const active = pathname === `/dashboard/${tab}`;
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={
+          <Link
+            href={`/dashboard/${tab}`}
+            className="h-9 w-full gap-2 px-3 text-sm"
+          />
+        }
+        tooltip={tooltip}
+        isActive={active}
+      >
+        <Icon className="size-4" />
+        <span>{children}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 }
 
@@ -370,7 +333,7 @@ function NavUser({
               </DropdownMenuLabel>
             </DropdownMenuGroup>
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={logoutAction}>
+              <DropdownMenuItem onClick={() => logoutAction()}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>

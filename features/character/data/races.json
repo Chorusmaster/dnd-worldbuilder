@@ -1,0 +1,47 @@
+[
+  {
+    "id": "human",
+    "name": "Human",
+    "image": "/images/races/human.jpg"
+  },
+  {
+    "id": "elf",
+    "name": "Elf",
+    "image": "/images/races/elf.jpg"
+  },
+  {
+    "id": "dwarf",
+    "name": "Dwarf",
+    "image": "/images/races/dwarf.jpg"
+  },
+  {
+    "id": "halfling",
+    "name": "Halfling",
+    "image": "/images/races/halfling.jpg"
+  },
+  {
+    "id": "dragonborn",
+    "name": "Dragonborn",
+    "image": "/images/races/dragonborn.jpg"
+  },
+  {
+    "id": "gnome",
+    "name": "Gnome",
+    "image": "/images/races/gnome.jpg"
+  },
+  {
+    "id": "half-elf",
+    "name": "Half-Elf",
+    "image": "/images/races/half-elf.jpg"
+  },
+  {
+    "id": "half-orc",
+    "name": "Half-Orc",
+    "image": "/images/races/half-orc.jpg"
+  },
+  {
+    "id": "tiefling",
+    "name": "Tiefling",
+    "image": "/images/races/tiefling.jpg"
+  }
+]
