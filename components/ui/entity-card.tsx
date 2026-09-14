@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon, LucideIcon } from "lucide-react";
 
 import {
   Card,
@@ -10,6 +10,7 @@ import {
 type EntityCardProps = {
   name: string;
   description?: string;
+  icon?: LucideIcon;
   image?: string;
   onClick?: () => void;
 };
@@ -17,6 +18,7 @@ type EntityCardProps = {
 export function EntityCard({
   name,
   description,
+  icon: Icon,
   image,
   onClick,
 }: EntityCardProps) {
@@ -25,7 +27,7 @@ export function EntityCard({
       className="group cursor-pointer overflow-hidden transition-colors hover:bg-muted/50 pt-0!"
       onClick={onClick}
     >
-      <div className="aspect-[16/9] overflow-hidden bg-muted">
+      <div className="aspect-video overflow-hidden bg-muted">
         {image ? (
           <Image
             src={image}
@@ -35,8 +37,8 @@ export function EntityCard({
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-muted-foreground">
-            <ImageIcon size={32} />
+          <div className="flex size-full items-center justify-center text-muted-foreground transition-colors group-hover:text-foreground">
+            {Icon ? <Icon size={48} strokeWidth={1.5} /> : <ImageIcon size={48} strokeWidth={1.5} />}
           </div>
         )}
       </div>
