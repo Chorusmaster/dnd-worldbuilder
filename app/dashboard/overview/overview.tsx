@@ -15,7 +15,7 @@ function Overview() {
   const world = dashboardContext.activeWorld;
 
   return (
-    <div className="space-y-6">
+    <div className="w-full h-full space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">{world.name}</h1>
       </div>
@@ -23,8 +23,8 @@ function Overview() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Entities", 0],
-          ["Locations", 0],
-          ["Categories", 0],
+          ["Maps", 0],
+          ["Campaigns", 0],
           ["Members", 1],
         ].map(([title, value]) => (
           <Card className="min-h-32 min-w-48" key={title}>

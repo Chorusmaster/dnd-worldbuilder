@@ -1,16 +1,17 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
 type CreateEntityCardProps = {
-  entityType?: string;
+  icon?: LucideIcon;
   onClick?: () => void;
 };
 
 export function CreateEntityCard({
-  entityType,
+  icon: Icon,
   onClick,
 }: CreateEntityCardProps) {
   return (
@@ -18,20 +19,17 @@ export function CreateEntityCard({
       className="group cursor-pointer overflow-hidden pt-0! transition-colors hover:bg-muted/50"
       onClick={onClick}
     >
-      <div className="aspect-[16/9] overflow-hidden bg-muted">
+      <div className="aspect-video overflow-hidden bg-muted">
         <div className="flex size-full items-center justify-center text-muted-foreground transition-colors group-hover:text-foreground">
-          <Plus size={32} />
+          {Icon ? <Icon size={48} strokeWidth={1.5} /> : null}
         </div>
       </div>
 
-      <CardContent className="px-4">
-        <h3 className="font-medium transition-colors group-hover:text-foreground">
-          Create new {entityType ?? "entity"}
-        </h3>
-
-        <p className="mt-1 text-sm text-muted-foreground">
-          Add a new {entityType ?? "entity"} to your world
-        </p>
+      <CardContent className="flex items-center justify-center px-4">
+        <Plus
+          size={24}
+          className="text-muted-foreground transition-colors group-hover:text-foreground"
+        />
       </CardContent>
     </Card>
   );

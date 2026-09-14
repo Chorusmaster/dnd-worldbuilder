@@ -1,0 +1,171 @@
+"use server";
+
+import { headers } from "next/headers";
+
+import {
+  createEntitySchema,
+  updateEntitySchema,
+  createEntityTypeSchema,
+  updateEntityTypeSchema,
+} from "./entity.schema";
+
+import {
+  createEntity,
+  updateEntity,
+  getEntities,
+  getEntityById,
+  deleteEntity,
+  createEntityType,
+  updateEntityType,
+  getEntityTypes,
+  getEntityTypeById,
+  deleteEntityType,
+} from "./entity.service";
+import { UserShieldIcon } from "lucide-react";
+
+// Entity
+
+export async function createEntityAction(input: unknown) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const extendedInput = {
+    ...(typeof input === "object" && input !== null ? input : {}),
+    createdBy: userId,
+  };
+
+  const data = createEntitySchema.parse(extendedInput);
+
+  return createEntity(data);
+}
+
+export async function updateEntityAction(
+  id: string,
+  input: unknown,
+) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const data = updateEntitySchema.parse(input);
+  const entity = await getEntityById(id);
+
+  if (entity.createdBy !== userId) {
+    throw new Error("Forbidden");
+  }
+
+  return updateEntity(id, data);
+}
+
+export async function getEntitiesAction(worldId: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return getEntities(userId, worldId);
+}
+
+export async function getEntityByIdAction(id: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const entity = await getEntityById(id);
+
+  if (
+    entity.createdBy !== userId &&
+    entity.visibility === "private"
+  ) {
+    throw new Error("Forbidden");
+  }
+
+  return entity;
+}
+
+export async function deleteEntityAction(id: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const entity = await getEntityById(id);
+
+  if (entity.createdBy !== userId) {
+    throw new Error("Forbidden");
+  }
+
+  await deleteEntity(id);
+}
+
+// EntityType
+
+export async function createEntityTypeAction(input: unknown) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const data = createEntityTypeSchema.parse(input);
+
+  return createEntityType(data);
+}
+
+export async function updateEntityTypeAction(
+  id: string,
+  input: unknown,
+) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const data = updateEntityTypeSchema.parse(input);
+  const entityType = await getEntityTypeById(id);
+
+  // TODO: check ownership
+
+  return updateEntityType(entityType._id, data);
+}
+
+export async function getEntityTypesAction(worldId: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return getEntityTypes(worldId);
+}
+
+export async function getEntityTypeByIdAction(id: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  return getEntityTypeById(id);
+}
+
+export async function deleteEntityTypeAction(id: string) {
+  const userId = (await headers()).get("x-user-id");
+  
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  await getEntityTypeById(id);
+  await deleteEntityType(id);
+}

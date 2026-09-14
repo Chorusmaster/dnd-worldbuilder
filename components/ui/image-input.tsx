@@ -1,25 +1,29 @@
 "use client";
 
-import { ImageIcon, Upload, X } from "lucide-react";
+import { ImageIcon, X } from "lucide-react";
 import { useRef } from "react";
+import { uploadImageAction } from "@/features/files/file-upload.action";
 
 type ImageInputProps = {
   value?: string;
   className?: string;
   onChange: (value: string) => void;
+  accept?: string;
 };
 
 export function ImageInput({
   value,
   className,
   onChange,
+  accept,
 }: ImageInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleFile(file?: File) {
+  async function handleFile(file?: File) {
     if (!file) return;
 
-    const url = URL.createObjectURL(file);
+    const url = await uploadImageAction(file);
+
     onChange(url);
   }
 
@@ -63,7 +67,7 @@ export function ImageInput({
 
           <div className="text-center">
             <p className="text-sm font-medium text-foreground">
-              Add character image
+              Add image
             </p>
             <p className="text-xs">
               Click to upload an image
@@ -75,9 +79,11 @@ export function ImageInput({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={accept}
         className="hidden"
-        onChange={(event) => handleFile(event.target.files?.[0])}
+        onChange={(e) => {
+          void handleFile(e.target.files?.[0]);
+        }}
       />
     </div>
   );

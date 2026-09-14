@@ -1,7 +1,9 @@
 "use client";
 
 import { PublicWorldRecord } from "@/features/world/world.repository";
-import { createContext, useContext, useState } from "react";
+import { getEntityTypesAction } from "@/features/entity/entity.actions";
+import { PublicEntityTypeRecord } from "@/features/entity/entity.service";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type DashboardContextValue = {
   createWorldOpen: boolean;
@@ -10,18 +12,46 @@ type DashboardContextValue = {
   setActiveWorld: (value: PublicWorldRecord | null) => void;
   activeTab: string;
   setActiveTab: (value: string) => void;
+  entityTypes: PublicEntityTypeRecord[];
+  setEntityTypes: React.Dispatch<
+    React.SetStateAction<PublicEntityTypeRecord[]>
+  >;
 };
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
 
-export function DashboardProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [createWorldOpen, setCreateWorldOpen] = useState(false);
-  const [activeWorld, setActiveWorld] = useState<PublicWorldRecord | null>(null);
+  const [activeWorld, setActiveWorld] = useState<PublicWorldRecord | null>(
+    null,
+  );
   const [activeTab, setActiveTab] = useState<string>("overview");
+  const [entityTypes, setEntityTypes] = useState<PublicEntityTypeRecord[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadEntityTypes() {
+      if (!activeWorld) {
+        setEntityTypes([]);
+        return;
+      }
+
+      const loadedEntityTypes = await getEntityTypesAction(
+        activeWorld._id.toString(),
+      );
+
+      if (!cancelled) {
+        setEntityTypes(loadedEntityTypes);
+      }
+    }
+
+    loadEntityTypes();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeWorld]);
 
   return (
     <DashboardContext.Provider
@@ -31,7 +61,9 @@ export function DashboardProvider({
         activeWorld,
         setActiveWorld,
         activeTab,
-        setActiveTab
+        setActiveTab,
+        entityTypes,
+        setEntityTypes,
       }}
     >
       {children}
@@ -43,9 +75,7 @@ export function useDashboard() {
   const context = useContext(DashboardContext);
 
   if (!context) {
-    throw new Error(
-      "useDashboard must be used within DashboardProvider"
-    );
+    throw new Error("useDashboard must be used within DashboardProvider");
   }
 
   return context;

@@ -1,6 +1,5 @@
 "use client";
 import { logoutAction } from "@/features/auth/auth.actions";
-import { useState } from "react";
 import Link from "next/link";
 
 import {
@@ -14,7 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarGroupLabel
+  SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,11 +28,11 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-import { 
-  ChevronsUpDown, 
-  LogOut, 
-  Plus, 
-  Earth, 
+import {
+  ChevronsUpDown,
+  LogOut,
+  Plus,
+  Earth,
   Trash2,
   Bug,
   Calendar,
@@ -45,6 +44,8 @@ import {
   Shield,
   Sword,
   Users,
+  Circle,
+  User,
 } from "lucide-react";
 
 import type { PublicUserRecord } from "@/features/auth/auth.repository";
@@ -52,6 +53,10 @@ import { PublicWorldRecord } from "@/features/world/world.repository";
 
 import { useDashboard } from "@/app/dashboard/dashboard-context";
 import { usePathname } from "next/navigation";
+import { createEntityTypeAction } from "@/features/entity/entity.actions";
+
+import { NewEntityTypeDialog } from "./new-entity-type-dialog";
+import { entityIcons } from "@/features/entity/entity.icons";
 
 type MainSidebarProps = {
   user: PublicUserRecord;
@@ -59,9 +64,29 @@ type MainSidebarProps = {
   deleteWorld: (id: string) => void;
 };
 
-export default function MainSidebar({ user, worlds, deleteWorld }: MainSidebarProps) {
-
+export default function MainSidebar({
+  user,
+  worlds,
+  deleteWorld,
+}: MainSidebarProps) {
   const dashboardContext = useDashboard();
+
+  const newEntityType = async (data: {
+    name: string;
+    slug: string;
+    icon: keyof typeof entityIcons;
+  }) => {
+    const extendedData = {
+      ...data,
+      worldId: dashboardContext.activeWorld?._id.toString(),
+    };
+
+    const newType = await createEntityTypeAction(extendedData);
+
+    if (newType) {
+      dashboardContext.setEntityTypes((prev) => [...prev, newType]);
+    }
+  };
 
   return (
     <div>
@@ -71,60 +96,67 @@ export default function MainSidebar({ user, worlds, deleteWorld }: MainSidebarPr
             <WorldSwitcher worlds={worlds} deleteWorld={deleteWorld} />
           </SidebarHeader>
 
-          {dashboardContext.activeWorld ?
-          
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>World</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarItem tab="overview" tooltip="Overview" icon={LayoutDashboard}>
-                  Overview
-                </SidebarItem>
-                <SidebarItem tab="maps" tooltip="Maps" icon={Map}>
-                  Maps
-                </SidebarItem>
-              </SidebarMenu>
-            </SidebarGroup>
+          {dashboardContext.activeWorld ? (
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>World</SidebarGroupLabel>
+                <SidebarMenu>
+                  <SidebarItem
+                    tab="overview"
+                    tooltip="Overview"
+                    icon={LayoutDashboard}
+                  >
+                    Overview
+                  </SidebarItem>
+                  <SidebarItem tab="maps" tooltip="Maps" icon={Map}>
+                    Maps
+                  </SidebarItem>
+                </SidebarMenu>
+              </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel>Entities</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarItem tab="characters" tooltip="Characters" icon={Users}>
-                  Characters
-                </SidebarItem>
-                <SidebarItem tab="locations" tooltip="Locations" icon={MapPin}>
-                  Locations
-                </SidebarItem>
-                <SidebarItem tab="factions" tooltip="Factions" icon={Shield}>
-                  Factions
-                </SidebarItem>
-                <SidebarItem tab="items" tooltip="Items" icon={Sword}>
-                  Items
-                </SidebarItem>
-                <SidebarItem tab="creatures" tooltip="Creatures" icon={Bug}>
-                  Creatures
-                </SidebarItem>
-              </SidebarMenu>
-            </SidebarGroup>
+              <SidebarGroup>
+                <SidebarGroupLabel>Entities</SidebarGroupLabel>
+                <SidebarMenu>
+                  {dashboardContext.entityTypes.map((type) => {
+                    const Icon =
+                      entityIcons[type.icon as keyof typeof entityIcons] ??
+                      Circle;
+                    return (
+                      <SidebarItem
+                        key={type._id}
+                        tab={type.slug}
+                        tooltip={type.name}
+                        icon={Icon}
+                      >
+                        {type.name}
+                      </SidebarItem>
+                    );
+                  })}
+                  <NewEntityTypeDialog onSubmit={newEntityType} />
+                </SidebarMenu>
+              </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel>Campaign</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarItem tab="quests" tooltip="Quests" icon={ScrollText}>
-                  Quests
-                </SidebarItem>
-                <SidebarItem tab="events" tooltip="Events" icon={Calendar}>
-                  Events
-                </SidebarItem>
-                <SidebarItem tab="notes" tooltip="Notes" icon={NotebookPen}>
-                  Notes
-                </SidebarItem>
-              </SidebarMenu>
-            </SidebarGroup>
-          </SidebarContent> :
-
-          <SidebarContent />
-          }
+              <SidebarGroup>
+                <SidebarGroupLabel>Campaign</SidebarGroupLabel>
+                <SidebarMenu>
+                  <SidebarItem tab="characters" tooltip="Characters" icon={User}>
+                    Characters
+                  </SidebarItem>
+                  <SidebarItem tab="quests" tooltip="Quests" icon={ScrollText}>
+                    Quests
+                  </SidebarItem>
+                  <SidebarItem tab="events" tooltip="Events" icon={Calendar}>
+                    Events
+                  </SidebarItem>
+                  <SidebarItem tab="notes" tooltip="Notes" icon={NotebookPen}>
+                    Notes
+                  </SidebarItem>
+                </SidebarMenu>
+              </SidebarGroup>
+            </SidebarContent>
+          ) : (
+            <SidebarContent />
+          )}
 
           <SidebarFooter>
             <NavUser user={user} />
@@ -170,7 +202,7 @@ function SidebarItem({
 
 function WorldSwitcher({
   worlds,
-  deleteWorld
+  deleteWorld,
 }: {
   worlds: PublicWorldRecord[];
   deleteWorld: (id: string) => void;
@@ -180,7 +212,7 @@ function WorldSwitcher({
 
   if (!dashboardContext.activeWorld) {
     return null;
-  } 
+  }
 
   return (
     <SidebarMenu>
@@ -196,13 +228,18 @@ function WorldSwitcher({
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               {dashboardContext.activeWorld.image ? (
-                <img src={dashboardContext.activeWorld.image} className="size-4" />
+                <img
+                  src={dashboardContext.activeWorld.image}
+                  className="size-4"
+                />
               ) : (
                 <Earth className="size-4" />
               )}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{dashboardContext.activeWorld.name}</span>
+              <span className="truncate font-medium">
+                {dashboardContext.activeWorld.name}
+              </span>
             </div>
             <ChevronsUpDown className="ml-auto" />
           </DropdownMenuTrigger>
@@ -225,10 +262,7 @@ function WorldSwitcher({
                   <div className="flex gap-2">
                     <div className="flex size-6 items-center justify-center rounded-md border">
                       {world.image ? (
-                        <img
-                          src={world.image}
-                          className="size-3.5 shrink-0"
-                        />
+                        <img src={world.image} className="size-3.5 shrink-0" />
                       ) : (
                         <Earth className="size-3.5 shrink-0" />
                       )}

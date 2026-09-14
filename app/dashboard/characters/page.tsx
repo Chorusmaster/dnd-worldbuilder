@@ -37,7 +37,6 @@ export default function CharactersTab() {
 
   return (
     <ListTab
-      entities={displayedEntities}
       page="characters"
       entityType="character"
     />
