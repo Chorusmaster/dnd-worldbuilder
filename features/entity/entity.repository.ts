@@ -18,10 +18,7 @@ export async function createEntity(data: CreateEntityInput) {
   return Entity.create(data);
 }
 
-export async function updateEntity(
-  id: string,
-  data: UpdateEntityInput,
-) {
+export async function updateEntity(id: string, data: UpdateEntityInput) {
   await connectDB();
 
   return Entity.findByIdAndUpdate(
@@ -37,15 +34,18 @@ export async function updateEntity(
 export async function getEntities({
   userId,
   worldId,
+  entityTypeId,
 }: {
   userId: string;
   worldId: string;
+  entityTypeId?: string;
 }) {
   await connectDB();
 
   return Entity.find({
     createdBy: userId,
     worldId,
+    ...(entityTypeId ? { typeId: entityTypeId } : {}),
   });
 }
 
@@ -65,9 +65,7 @@ export async function deleteEntity(id: string) {
 
 // EntityType
 
-export async function createEntityType(
-  data: CreateEntityTypeInput,
-) {
+export async function createEntityType(data: CreateEntityTypeInput) {
   await connectDB();
 
   return EntityType.create(data);

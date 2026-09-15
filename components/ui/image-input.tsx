@@ -2,7 +2,7 @@
 
 import { ImageIcon, X } from "lucide-react";
 import { useRef } from "react";
-import { uploadImageAction } from "@/features/files/file-upload.action";
+import { uploadImageAction, deleteImageAction } from "@/features/files/file-upload.action";
 
 type ImageInputProps = {
   value?: string;
@@ -27,7 +27,9 @@ export function ImageInput({
     onChange(url);
   }
 
-  function handleRemove() {
+  async function handleRemove() {
+    await deleteImageAction(value);
+
     onChange("");
 
     if (inputRef.current) {

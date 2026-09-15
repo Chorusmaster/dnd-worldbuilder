@@ -18,7 +18,6 @@ import {
   getEntities as getEntitiesRepository,
   getEntityById as getEntityByIdRepository,
   deleteEntity as deleteEntityRepository,
-
   createEntityType as createEntityTypeRepository,
   updateEntityType as updateEntityTypeRepository,
   getEntityTypes as getEntityTypesRepository,
@@ -26,19 +25,20 @@ import {
   deleteEntityType as deleteEntityTypeRepository,
 } from "./entity.repository";
 
-export type PublicEntityRecord =
-  Omit<Entity, "worldId" | "typeId" | "createdBy"> & {
-    _id: string;
-    worldId: string;
-    typeId: string;
-    createdBy: string;
-  };
+export type PublicEntityRecord = Omit<
+  Entity,
+  "worldId" | "typeId" | "createdBy"
+> & {
+  _id: string;
+  worldId: string;
+  typeId: string;
+  createdBy: string;
+};
 
-export type PublicEntityTypeRecord =
-  Omit<EntityType, "worldId"> & {
-    _id: string;
-    worldId: string;
-  };
+export type PublicEntityTypeRecord = Omit<EntityType, "worldId"> & {
+  _id: string;
+  worldId: string;
+};
 
 function toPublicEntityRecord(
   entity: HydratedDocument<Entity>,
@@ -68,18 +68,13 @@ function toPublicEntityTypeRecord(
 
 // Entity
 
-export async function createEntity(
-  data: CreateEntityInput,
-) {
+export async function createEntity(data: CreateEntityInput) {
   const entity = await createEntityRepository(data);
 
   return toPublicEntityRecord(entity);
 }
 
-export async function updateEntity(
-  id: string,
-  data: UpdateEntityInput,
-) {
+export async function updateEntity(id: string, data: UpdateEntityInput) {
   const entity = await updateEntityRepository(id, data);
 
   if (!entity) {
@@ -92,10 +87,12 @@ export async function updateEntity(
 export async function getEntities(
   userId: string,
   worldId: string,
+  entityTypeId?: string,
 ) {
   const entities = await getEntitiesRepository({
     userId,
     worldId,
+    entityTypeId,
   });
 
   return entities.map(toPublicEntityRecord);
@@ -121,9 +118,7 @@ export async function deleteEntity(id: string) {
 
 // EntityType
 
-export async function createEntityType(
-  data: CreateEntityTypeInput,
-) {
+export async function createEntityType(data: CreateEntityTypeInput) {
   const entityType = await createEntityTypeRepository(data);
 
   return toPublicEntityTypeRecord(entityType);
@@ -133,10 +128,7 @@ export async function updateEntityType(
   id: string,
   data: UpdateEntityTypeInput,
 ) {
-  const entityType = await updateEntityTypeRepository(
-    id,
-    data,
-  );
+  const entityType = await updateEntityTypeRepository(id, data);
 
   if (!entityType) {
     throw new Error("Entity type not found");
@@ -146,15 +138,13 @@ export async function updateEntityType(
 }
 
 export async function getEntityTypes(worldId: string) {
-  const entityTypes =
-    await getEntityTypesRepository(worldId);
+  const entityTypes = await getEntityTypesRepository(worldId);
 
   return entityTypes.map(toPublicEntityTypeRecord);
 }
 
 export async function getEntityTypeById(id: string) {
-  const entityType =
-    await getEntityTypeByIdRepository(id);
+  const entityType = await getEntityTypeByIdRepository(id);
 
   if (!entityType) {
     throw new Error("Entity type not found");

@@ -1,6 +1,6 @@
 "use server";
 
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, writeFile, unlink } from "fs/promises";
 import path from "path";
 
 export async function uploadImageAction(
@@ -30,4 +30,22 @@ export async function uploadImageAction(
   await writeFile(filepath, buffer);
 
   return `/uploads/${filename}`;
+}
+
+export async function deleteImageAction(url?: string) {
+  if (!url) return;
+
+  const pathname = url.startsWith("http")
+    ? new URL(url).pathname
+    : url;
+
+  const filePath = path.join(process.cwd(), "public", pathname);
+
+  try {
+    await unlink(filePath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      throw error;
+    }
+  }
 }

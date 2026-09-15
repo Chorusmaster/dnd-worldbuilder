@@ -51,12 +51,11 @@ function ListTab({ page }: ListTabProps) {
 
       const worldEntities = await getEntitiesAction(
         dashboardContext.activeWorld._id,
+        entityType._id,
       );
 
       if (!cancelled) {
-        setLoadedEntities(
-          worldEntities.filter((entity) => entity.typeId === entityType._id),
-        );
+        setLoadedEntities(worldEntities);
       }
     }
 
